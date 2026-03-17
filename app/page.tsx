@@ -21,7 +21,9 @@ function ChatDashboard() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [userInitial, setUserInitial] = useState('U');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const initializingSession = useRef(false);
 
   useEffect(() => {
     const initChat = async () => {
@@ -30,7 +32,13 @@ function ChatDashboard() {
         window.location.href = '/login';
         return;
       }
-      const { email } = JSON.parse(currentUserInfo);
+      const { email, name } = JSON.parse(currentUserInfo);
+      
+      if (name) {
+        setUserInitial(name.charAt(0).toUpperCase());
+      } else if (email) {
+        setUserInitial(email.charAt(0).toUpperCase());
+      }
 
       let currentId = idFromUrl;
 
@@ -45,6 +53,9 @@ function ChatDashboard() {
         if (latestSessions && latestSessions.length > 0) {
           currentId = latestSessions[0].id;
         } else {
+          if (initializingSession.current) return;
+          initializingSession.current = true;
+          
           const { data: session } = await supabase
             .from('chat_sessions')
             .insert([{ user_email: email, title: 'Nueva Conversación' }])
@@ -60,6 +71,8 @@ function ChatDashboard() {
             currentId = session.id;
             window.dispatchEvent(new Event('chatHistoryUpdated'));
           }
+          
+          initializingSession.current = false;
         }
 
         if (currentId) {
@@ -206,7 +219,7 @@ function ChatDashboard() {
               </div>
 
               {msg.role === 'user' && (
-                <div className={styles.avatarUser}>E</div>
+                <div className={styles.avatarUser}>{userInitial}</div>
               )}
             </div>
           ))}
