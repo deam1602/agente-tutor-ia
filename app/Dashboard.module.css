@@ -1,7 +1,8 @@
 .chatContainer {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
+  overflow: hidden;
   position: relative;
 }
 
@@ -103,7 +104,7 @@
 }
 
 .inputArea {
-  padding: 1rem 1.5rem;
+  padding: 1rem 1.5rem 0.5rem;
   background-color: var(--bg-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
