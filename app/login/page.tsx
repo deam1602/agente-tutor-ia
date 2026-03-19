@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import styles from './Login.module.css';
 
 export default function LoginPage() {
@@ -41,8 +42,10 @@ export default function LoginPage() {
 
       <div className={styles.loginCard}>
         <div className={styles.header}>
-          <div className={styles.logo}>🤖</div>
-          <h1 className={styles.title}>Agente Tutor IA</h1>
+          <div className={styles.logoWrapper}>
+            <Image src="/logo.png" alt="Universidad Rafael Landívar" width={220} height={70} style={{ objectFit: 'contain' }} priority />
+          </div>
+          <h1 className={styles.title}>LogicAI</h1>
           <p className={styles.subtitle}>Inicia sesión para comenzar a aprender</p>
         </div>
 

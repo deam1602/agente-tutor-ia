@@ -57,14 +57,11 @@
   margin-bottom: 2rem;
 }
 
-.logo {
-  font-size: 3rem;
-  display: inline-block;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background-color: var(--bg-primary);
-  border-radius: var(--radius-full);
-  box-shadow: var(--shadow-md);
+.logoWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 
 .title {
@@ -106,7 +103,6 @@
   font-size: 1rem;
   outline: none;
   transition: all 0.2s;
-  font-family: inherit;
 }
 
 .inputGroup input:focus {

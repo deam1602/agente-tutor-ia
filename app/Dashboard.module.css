@@ -6,7 +6,6 @@
   position: relative;
 }
 
-/* Messages Area */
 .messagesArea {
   flex: 1;
   overflow-y: auto;
@@ -136,7 +135,6 @@
   background: transparent;
   border: none;
   color: var(--text-primary);
-  font-family: inherit;
   font-size: 1rem;
   padding: 0.5rem;
   outline: none;

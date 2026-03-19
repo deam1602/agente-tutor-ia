@@ -46,6 +46,21 @@ export default function Sidebar() {
     }
     const { email } = JSON.parse(currentUserInfo);
 
+    const { data: latestSessions } = await supabase
+      .from('chat_sessions')
+      .select('id, title')
+      .eq('user_email', email)
+      .order('created_at', { ascending: false })
+      .limit(1);
+
+    if (latestSessions && latestSessions.length > 0) {
+      if (latestSessions[0].title === 'Nueva Conversación') {
+        router.push(`/?id=${latestSessions[0].id}`);
+        setIsOpen(false);
+        return;
+      }
+    }
+
     const { data: session } = await supabase
       .from('chat_sessions')
       .insert([{ user_email: email, title: 'Nueva Conversación' }])

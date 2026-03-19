@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './Header.module.css';
 
 export default function Header() {
@@ -21,7 +22,6 @@ export default function Header() {
     };
     document.addEventListener('mousedown', handleClickOutside);
 
-    // Load dynamic user info
     const userInfo = localStorage.getItem('currentUser');
     if (userInfo) {
       try {
@@ -51,8 +51,8 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <div className={styles.logoContainer}>
-        <div className={styles.logoIcon}>🤖</div>
-        <h1 className={styles.title}>Pensamiento Computacional</h1>
+        <Image src="/logo.png" alt="Logo Universidad" width={140} height={40} style={{ objectFit: 'contain' }} priority />
+        <h1 className={styles.title}>LogicAI</h1>
       </div>
       <div className={styles.userActions}>
         <span className={styles.userName}>{userName}</span>
