@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5rem;
+  padding: 0 0.5rem;
   background-color: var(--bg-glass);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -11,6 +11,12 @@
   position: sticky;
   top: 0;
   z-index: 40;
+}
+
+@media (min-width: 640px) {
+  .header {
+    padding: 0 1.5rem;
+  }
 }
 
 .logoContainer {
