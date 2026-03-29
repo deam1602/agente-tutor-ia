@@ -6,6 +6,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import styles from './Dashboard.module.css';
 import { supabase } from '@/lib/supabase';
 
+import ReactMarkdown from 'react-markdown';
+
 interface Message {
   id: string;
   role: 'user' | 'system' | 'assistant';
@@ -291,13 +293,14 @@ function ChatDashboard() {
               )}
 
               <div className={`${styles.messageBubble} ${msg.role === 'user' ? styles.bubbleUser : styles.bubbleSystem}`}>
+                
                 {msg.role !== 'user' ? (
                   <>
+
                     <div className={styles.markdownContent}>
-                      {msg.content.split('\n').map((line, idx) => (
-                        <p key={idx}>{line}</p>
-                      ))}
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
+
                     {msg.content.length > 0 && (
                       <div className={styles.speechControls}>
                         <button
@@ -321,7 +324,9 @@ function ChatDashboard() {
                     )}
                   </>
                 ) : (
-                  <p>{msg.content}</p>
+                  <div style={{ whiteSpace: 'pre-wrap'}}>
+                    {msg.content}
+                  </div>
                 )}
               </div>
 

@@ -94,13 +94,106 @@
   border-top-right-radius: 0.25rem;
 }
 
+
+
+.markdownContent {
+  line-height: 1.6;
+  font-size: 14px;
+  padding-left: 16px; 
+  padding-right: 16px; 
+}
+
+/* TÍTULOS */
+.markdownContent h1,
+.markdownContent h2,
+.markdownContent h3 {
+  font-weight: 600;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.markdownContent h2 {
+  border-bottom: 1px solid #333;
+  padding-bottom: 4px;
+
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-size: 21px;
+  font-weight: 600;
+
+  border-left: 3px solid #4fc3f7;
+  padding-left: 8px;
+}
+
+.markdownContent h3 {
+  font-size: 18px;
+  padding-bottom: 4px;
+}
+
+/* LISTAS */
+.markdownContent ul {
+  padding-left: 22px;
+  padding-right: 16px; 
+  margin: 8px 0;
+}
+
+.markdownContent li {
+  margin-bottom: 6px;
+  
+}
+
+/* NEGRITAS */
+.markdownContent strong {
+  font-weight: 700;
+}
+
+/* TEXTO EN LINEA TIPO `codigo`   c8c2c2*/
+.markdownContent code {
+  background-color: #e9e4e4;
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #000000;
+
+  display: inline-block;
+  margin: 2px 2px;
+}
+
+/* BLOQUES DE TEXTO (si aparecen) e3d9d9*/
+.markdownContent pre {
+  background-color: #e9e4e4;
+  padding: 10px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* PÁRRAFOS */
 .markdownContent p {
+  margin: 6px 0;
   margin-bottom: 0.75rem;
 }
 
 .markdownContent p:last-child {
   margin-bottom: 0;
 }
+
+.markdownContent ol {
+  padding-left: 20px;
+  padding-right: 16px; 
+  margin: 10px 0;
+}
+
+.markdownContent ol li {
+  font-weight: 600; 
+  margin-top: 10px;
+}
+
+.markdownContent ol li p {
+  font-weight: normal; 
+  margin-top: 4px;
+}
+
+
 
 .inputArea {
   padding: 1rem 1.5rem 0.25rem;

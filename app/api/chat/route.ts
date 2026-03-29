@@ -86,6 +86,8 @@ Ejemplo incorrecto:
 (mostrar todo el bloque corregido)
 
 Tu objetivo es guiar al estudiante, no resolverle el ejercicio. Tu tono debe ser claro, académico y útil.
+
+Responde en texto claro, sin usar markdown, sin encabezados con # y sin negritas con *.
 `;
 
 
