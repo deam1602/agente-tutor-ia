@@ -19,12 +19,14 @@ export default function Sidebar() {
   const loadHistory = async () => {
     const currentUserInfo = localStorage.getItem('currentUser');
     if (!currentUserInfo) return;
+
     const { email } = JSON.parse(currentUserInfo);
 
     const { data } = await supabase
       .from('chat_sessions')
       .select('id, title')
       .eq('user_email', email)
+      .eq('is_hidden', false)
       .order('created_at', { ascending: false });
 
     if (data) {
@@ -33,9 +35,16 @@ export default function Sidebar() {
   };
 
   useEffect(() => {
-    loadHistory();
-    window.addEventListener('chatHistoryUpdated', loadHistory);
-    return () => window.removeEventListener('chatHistoryUpdated', loadHistory);
+    const handleUpdate = () => {
+      void loadHistory();
+    };
+
+    void loadHistory();
+    window.addEventListener('chatHistoryUpdated', handleUpdate);
+
+    return () => {
+      window.removeEventListener('chatHistoryUpdated', handleUpdate);
+    };
   }, []);
 
   const handleNewChat = async () => {
@@ -44,12 +53,14 @@ export default function Sidebar() {
       router.push('/login');
       return;
     }
+
     const { email } = JSON.parse(currentUserInfo);
 
     const { data: latestSessions } = await supabase
       .from('chat_sessions')
       .select('id, title')
       .eq('user_email', email)
+      .eq('is_hidden', false)
       .order('created_at', { ascending: false })
       .limit(1);
 
@@ -74,9 +85,43 @@ export default function Sidebar() {
         content: '¡Hola! Soy tu Agente Tutor IA de la Universidad. \n\nRecuerda que estoy diseñado para **explicar conceptos** con detalles o pseudocódigo, pero no te brindaré el código terminado.\n\n¿En qué te puedo ayudar hoy con Pensamiento Computacional?'
       }]);
 
-      loadHistory();
+      window.dispatchEvent(new Event('chatHistoryUpdated'));
       router.push(`/?id=${session.id}`);
       setIsOpen(false);
+    }
+  };
+
+  const handleHideChat = async (chatId: string) => {
+    const confirmed = window.confirm(
+      'Este chat se borrará del historial. ¿Estás seguro de que deseas continuar?'
+    );
+
+    if (!confirmed) return;
+
+    const currentUserInfo = localStorage.getItem('currentUser');
+    if (!currentUserInfo) return;
+
+    const { email } = JSON.parse(currentUserInfo);
+
+    const { error } = await supabase
+      .from('chat_sessions')
+      .update({ is_hidden: true })
+      .eq('id', chatId)
+      .eq('user_email', email);
+
+    if (error) {
+      console.error('Error ocultando chat:', error);
+      return;
+    }
+
+    setConversations((prev) => prev.filter((chat) => chat.id !== chatId));
+    window.dispatchEvent(new Event('chatHistoryUpdated'));
+
+    const currentParams = new URLSearchParams(window.location.search);
+    const currentId = currentParams.get('id');
+
+    if (currentId === chatId) {
+      router.push('/');
     }
   };
 
@@ -121,13 +166,22 @@ export default function Sidebar() {
           <h3 className={styles.sectionTitle}>Historial Reciente</h3>
           <ul className={styles.chatList}>
             {conversations.map((chat) => (
-              <li key={chat.id}>
+              <li key={chat.id} className={styles.chatRow}>
                 <Link href={`/?id=${chat.id}`} className={styles.chatItem}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                   </svg>
                   <span className={styles.chatTitle}>{chat.title}</span>
                 </Link>
+
+                <button
+                  type="button"
+                  className={styles.deleteBtn}
+                  title="Ocultar chat"
+                  onClick={() => void handleHideChat(chat.id)}
+                >
+                  ✕
+                </button>
               </li>
             ))}
           </ul>
