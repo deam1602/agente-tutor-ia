@@ -10,6 +10,7 @@ export interface ChatSession {
   user_email: string;
   title: string;
   created_at?: string;
+  is_hidden?: boolean;
 }
 
 export interface ChatMessage {

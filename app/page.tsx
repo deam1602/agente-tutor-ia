@@ -53,6 +53,7 @@ function ChatDashboard() {
           .from('chat_sessions')
           .select('id')
           .eq('user_email', email)
+          .eq('is_hidden', false)
           .order('created_at', { ascending: false })
           .limit(1);
 
@@ -85,11 +86,25 @@ function ChatDashboard() {
           router.replace(`/?id=${currentId}`);
         }
       }
-
+      //===================================//
       if (currentId) {
         if (currentId !== currentChatId) {
-          setCurrentChatId(currentId);
           setIsLoading(true);
+
+          const { data: sessionData } = await supabase
+            .from('chat_sessions')
+            .select('id, is_hidden')
+            .eq('id', currentId)
+            .single();
+
+          if (!sessionData || sessionData.is_hidden) {
+            setIsLoading(false);
+            router.replace('/');
+            return;
+          }
+
+          setCurrentChatId(currentId);
+
           const { data: msgs } = await supabase
             .from('chat_messages')
             .select('*')
@@ -104,9 +119,12 @@ function ChatDashboard() {
             })));
           } else {
             setMessages([{
-              id: '1', role: 'system', content: '¡Hola! Soy tu Agente Tutor IA de la Universidad. \n\nRecuerda que estoy diseñado para **explicar conceptos** con detalles o pseudocódigo, pero no te brindaré el código terminado.\n\n¿En qué te puedo ayudar hoy con Pensamiento Computacional?'
+              id: '1',
+              role: 'system',
+              content: '¡Hola! Soy tu Agente Tutor IA de la Universidad. \n\nRecuerda que estoy diseñado para **explicar conceptos** con detalles o pseudocódigo, pero no te brindaré el código terminado.\n\n¿En qué te puedo ayudar hoy con Pensamiento Computacional?'
             }]);
           }
+
           setIsLoading(false);
         }
       }
