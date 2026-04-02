@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from './Login.module.css';
+import { supabase } from '@/lib/supabase';
+import { validateInstitutionalEmail } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,25 +14,60 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
-    const validUsers = [
-      { email: 'estudiante@url.edu.gt', password: 'password123', role: 'student' },
-      { email: 'admin@url.edu.gt', password: 'admin', role: 'admin' }
-    ];
+    try {
+      const normalizedEmail = email.trim().toLowerCase();
 
-    const userMatch = validUsers.find(
-      (u) => u.email === email && u.password === password
-    );
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+        email: normalizedEmail,
+        password,
+      });
 
-    if (userMatch) {
-      localStorage.setItem('currentUser', JSON.stringify({ email: userMatch.email, role: userMatch.role }));
+      if (!validateInstitutionalEmail(normalizedEmail)) {
+        setError('Debes ingresar un correo institucional válido.');
+        setIsLoading(false);
+        return;
+      }
+
+      if (loginError || !data.user) {
+        setError('Credenciales incorrectas. Intenta de nuevo.');
+        setIsLoading(false);
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('email, carnet, role')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profileError || !profile) {
+        setError('No se encontró el perfil del usuario.');
+        await supabase.auth.signOut();
+        setIsLoading(false);
+        return;
+      }
+
+      localStorage.setItem(
+        'currentUser',
+        JSON.stringify({
+          email: profile.email,
+          name: profile.carnet,
+          role: profile.role,
+        })
+      );
+
       router.push('/');
-    } else {
-      setError('Credenciales incorrectas. Intenta de nuevo.');
+    } catch {
+      setError('Ocurrió un error al iniciar sesión.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,26 +81,28 @@ export default function LoginPage() {
       <div className={styles.loginCard}>
         <div className={styles.header}>
           <div className={styles.logoWrapper}>
-            <Image src="/logo.png" alt="Universidad Rafael Landívar" width={220} height={70} style={{ objectFit: 'contain' }} priority />
+            <Image
+              src="/logo.png"
+              alt="Universidad Rafael Landívar"
+              width={220}
+              height={70}
+              style={{ objectFit: 'contain' }}
+              priority
+            />
           </div>
           <h1 className={styles.title}>LogicAI</h1>
           <p className={styles.subtitle}>Inicia sesión para comenzar a aprender</p>
         </div>
 
         <form className={styles.form} onSubmit={handleLogin}>
-
-          {error && (
-            <div className={styles.errorMessage}>
-              {error}
-            </div>
-          )}
+          {error && <div className={styles.errorMessage}>{error}</div>}
 
           <div className={styles.inputGroup}>
             <label htmlFor="email">Correo Institucional</label>
             <input
               type="email"
               id="email"
-              placeholder="estudiante@url.edu.gt"
+              placeholder="tu.correo@url.edu.gt"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -81,15 +121,16 @@ export default function LoginPage() {
             />
           </div>
 
-          <button type="submit" className={styles.submitBtn}>
-            Ingresar al Tutor
+          <button type="submit" className={styles.submitBtn} disabled={isLoading}>
+            {isLoading ? 'Ingresando...' : 'Ingresar al Tutor'}
           </button>
         </form>
 
         <div className={styles.demoHints}>
-          <p><strong>Cuentas Demo:</strong></p>
-          <p>👨‍🎓 estudiante@url.edu.gt / password123</p>
-          <p>👨‍🏫 admin@url.edu.gt / admin</p>
+          <p>¿No tienes cuenta?</p>
+          <p>
+            <Link href="/register">Crear cuenta</Link>
+          </p>
         </div>
       </div>
     </div>
