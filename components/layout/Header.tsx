@@ -3,11 +3,18 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import Link from 'next/link';
 import Image from 'next/image';
 import styles from './Header.module.css';
 
-export default function Header() {
+interface HeaderProps {
+  sidebarCollapsed: boolean;
+  onToggleSidebar: () => void;
+}
+
+export default function Header({
+  sidebarCollapsed,
+  onToggleSidebar,
+}: HeaderProps) {
   const [showMenu, setShowMenu] = useState(false);
   const [userName, setUserName] = useState('Usuario');
   const [userInitial, setUserInitial] = useState('U');
@@ -50,10 +57,40 @@ export default function Header() {
 
   return (
     <header className={styles.header}>
-      <div className={styles.logoContainer}>
-        <Image src="/logo.png" alt="Logo Universidad" width={140} height={40} style={{ objectFit: 'contain' }} priority />
-        <h1 className={styles.title}>LogicAI</h1>
+      <div className={styles.leftSection}>
+        <button
+          type="button"
+          className={styles.sidebarToggle}
+          onClick={onToggleSidebar}
+          title={sidebarCollapsed ? 'Mostrar historial' : 'Ocultar historial'}
+          aria-label={sidebarCollapsed ? 'Mostrar historial' : 'Ocultar historial'}
+        >
+          {sidebarCollapsed ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <path d="M9 4v16"></path>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+              <path d="M15 4v16"></path>
+            </svg>
+          )}
+        </button>
+
+        <div className={styles.logoContainer}>
+          <Image
+            src="/logo.png"
+            alt="Logo Universidad"
+            width={140}
+            height={40}
+            style={{ objectFit: 'contain' }}
+            priority
+          />
+          <h1 className={styles.title}>LogicAI</h1>
+        </div>
       </div>
+
       <div className={styles.userActions}>
         <span className={styles.userName}>{userName}</span>
         <div className={styles.avatarContainer} ref={menuRef}>
@@ -67,7 +104,9 @@ export default function Header() {
           </div>
           {showMenu && (
             <div className={styles.dropdownMenu}>
-              <button onClick={handleLogout} className={styles.logoutBtn}>Cerrar Sesión</button>
+              <button onClick={handleLogout} className={styles.logoutBtn}>
+                Cerrar Sesión
+              </button>
             </div>
           )}
         </div>
