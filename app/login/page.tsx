@@ -24,16 +24,16 @@ export default function LoginPage() {
     try {
       const normalizedEmail = email.trim().toLowerCase();
 
-      const { data, error: loginError } = await supabase.auth.signInWithPassword({
-        email: normalizedEmail,
-        password,
-      });
-
       if (!validateInstitutionalEmail(normalizedEmail)) {
         setError('Debes ingresar un correo institucional válido.');
         setIsLoading(false);
         return;
       }
+
+      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+        email: normalizedEmail,
+        password,
+      });
 
       if (loginError || !data.user) {
         setError('Credenciales incorrectas. Intenta de nuevo.');
@@ -82,7 +82,7 @@ export default function LoginPage() {
         <div className={styles.header}>
           <div className={styles.logoWrapper}>
             <Image
-              src="/logo.png"
+              src="/blackURLlogo.png"
               alt="Universidad Rafael Landívar"
               width={220}
               height={70}

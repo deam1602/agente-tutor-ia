@@ -1,17 +1,18 @@
 .sidebar {
-  width: 280px;
+  width: 300px;
   flex-shrink: 0;
-  height: calc(100vh - 64px);
-  background-color: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
+  height: calc(100vh - 76px);
+  background: linear-gradient(180deg, #111111 0%, #1a1a1a 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
-  top: 64px;
+  top: 76px;
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 50;
+  box-shadow: 12px 0 30px rgba(0, 0, 0, 0.16);
 }
 
 .sidebar.open {
@@ -23,11 +24,12 @@
     position: static;
     transform: translateX(0);
     height: 100%;
+    box-shadow: none;
   }
 }
 
 .header {
-  padding: 1rem;
+  padding: 1rem 1rem 0.95rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -37,29 +39,41 @@
 .newChatBtn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.55rem;
   width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
-  font-weight: 500;
-  transition: all 0.2s;
+  padding: 0.95rem 1rem;
+  background: linear-gradient(135deg, #ffffff, #ecebe7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  color: #0b0b0c;
+  font-weight: 700;
+  font-size: 0.94rem;
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+  box-shadow: 0 10px 26px rgba(255, 255, 255, 0.08);
 }
 
 .newChatBtn:hover {
-  border-color: var(--accent-color);
-  color: var(--accent-color);
-  background-color: var(--bg-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(255, 255, 255, 0.12);
 }
 
 .closeButton {
   display: flex;
-  background: none;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
   border: none;
-  color: var(--text-secondary);
+  color: var(--text-sidebar-muted);
   padding: 0.5rem;
+  margin-left: 0.45rem;
+  border-radius: var(--radius-md);
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
 }
 
 @media (min-width: 768px) {
@@ -71,24 +85,24 @@
 .content {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem;
+  padding: 0.65rem 0.9rem 1rem;
 }
 
 .sectionTitle {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  padding-left: 0.5rem;
+  letter-spacing: 0.1em;
+  color: var(--text-sidebar-muted);
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  padding: 0 0.6rem;
 }
 
 .chatList {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.4rem;
 }
 
 .chatRow {
@@ -96,27 +110,41 @@
   align-items: center;
   gap: 0.35rem;
   width: 100%;
+  padding: 0.1rem;
+  border-radius: 1rem;
+  transition: background-color 0.2s;
+}
+
+.chatRow:hover {
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .chatItem {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  transition: all 0.2s;
+  gap: 0.72rem;
+  padding: 0.85rem 0.85rem;
+  border-radius: 0.9rem;
+  color: var(--text-sidebar);
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
   flex: 1;
   min-width: 0;
+  background: transparent;
 }
 
 .chatItem:hover {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transform: translateX(1px);
+}
+
+.chatItem svg {
+  flex-shrink: 0;
+  opacity: 0.95;
 }
 
 .chatTitle {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -127,20 +155,20 @@
   width: 2rem;
   height: 2rem;
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: 0.8rem;
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-sidebar-muted);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s;
-  opacity: 0.7;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s, opacity 0.2s;
+  opacity: 0.82;
 }
 
 .deleteBtn:hover {
-  background-color: var(--bg-primary);
-  color: #ff6b6b;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5f5f5;
   opacity: 1;
 }
 
@@ -153,16 +181,16 @@
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
-  width: 3rem;
-  height: 3rem;
+  width: 3.2rem;
+  height: 3.2rem;
   border-radius: var(--radius-full);
-  background-color: var(--accent-color);
+  background: linear-gradient(135deg, #1a1a1a, #2e2e2e);
   color: white;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
   z-index: 20;
   transition: transform 0.2s, opacity 0.2s;
 }
@@ -182,7 +210,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(4px);
   z-index: 25;
 }
@@ -191,4 +219,8 @@
   .overlay {
     display: none;
   }
+}
+
+.sidebar {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
 }

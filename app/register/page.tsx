@@ -109,7 +109,7 @@ export default function RegisterPage() {
         <div className={styles.header}>
           <div className={styles.logoWrapper}>
             <Image
-              src="/logo.png"
+              src="/blackURLlogo.png"
               alt="Universidad Rafael Landívar"
               width={220}
               height={70}
