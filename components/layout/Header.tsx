@@ -84,6 +84,7 @@ export default function Header({
             alt="Logo Universidad"
             width={140}
             height={40}
+            className={styles.universityLogo}
             style={{ objectFit: 'contain' }}
             priority
           />
