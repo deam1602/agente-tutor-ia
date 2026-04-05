@@ -70,22 +70,16 @@
 }
 
 .userName {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: #f1f1f1;
-  display: none;
+  display: inline-flex;
+  align-items: center;
   white-space: nowrap;
-  padding: 0.5rem 0.9rem;
+  padding: 0.42rem 0.72rem;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-full);
-}
-
-@media (min-width: 640px) {
-  .userName {
-    display: inline-flex;
-    align-items: center;
-  }
 }
 
 .avatarContainer {
@@ -155,4 +149,41 @@
 .logoutBtn:hover {
   background-color: #f3f2ef;
   color: #111111;
+}
+
+.universityLogo {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .universityLogo {
+    display: none;
+  }
+
+  .header {
+    padding: 0 1rem;
+  }
+
+  .leftSection {
+    gap: 0.65rem;
+  }
+
+  .title {
+    font-size: 1.15rem;
+    position: static;
+    transform: none;
+  }
+
+  .sidebarToggle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .userName {
+    font-size: 0.76rem;
+    padding: 0.38rem 0.6rem;
+    max-width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

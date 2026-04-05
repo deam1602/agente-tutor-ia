@@ -11,8 +11,12 @@ interface ChatHistory {
   title: string;
 }
 
-export default function Sidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const [conversations, setConversations] = useState<ChatHistory[]>([]);
   const router = useRouter();
 
@@ -67,7 +71,7 @@ export default function Sidebar() {
     if (latestSessions && latestSessions.length > 0) {
       if (latestSessions[0].title === 'Nueva Conversación') {
         router.push(`/?id=${latestSessions[0].id}`);
-        setIsOpen(false);
+        onClose();
         return;
       }
     }
@@ -87,7 +91,7 @@ export default function Sidebar() {
 
       window.dispatchEvent(new Event('chatHistoryUpdated'));
       router.push(`/?id=${session.id}`);
-      setIsOpen(false);
+      onClose();
     }
   };
 
@@ -125,25 +129,9 @@ export default function Sidebar() {
     }
   };
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <>
-      {isOpen && <div className={styles.overlay} onClick={toggleSidebar} />}
-
-      <button
-        className={`${styles.toggleButton} ${isOpen ? styles.hidden : ''}`}
-        onClick={toggleSidebar}
-        aria-label="Abrir menú"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
+      {isOpen && <div className={styles.overlay} onClick={onClose} />}
 
       <aside className={`${styles.sidebar} ${isOpen ? styles.open : ''}`}>
         <div className={styles.header}>
@@ -154,7 +142,7 @@ export default function Sidebar() {
             </svg>
             Nueva Conversación
           </button>
-          <button className={styles.closeButton} onClick={toggleSidebar}>
+          <button className={styles.closeButton} onClick={onClose}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -167,7 +155,11 @@ export default function Sidebar() {
           <ul className={styles.chatList}>
             {conversations.map((chat) => (
               <li key={chat.id} className={styles.chatRow}>
-                <Link href={`/?id=${chat.id}`} className={styles.chatItem}>
+                <Link
+                  href={`/?id=${chat.id}`}
+                  className={styles.chatItem}
+                  onClick={onClose}
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                   </svg>
