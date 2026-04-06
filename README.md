@@ -1,5 +1,7 @@
 # AGENTE-TUTOR-IA
 
+Enlace directo: https://tutor-ia-landivar.vercel.app/
+
 ## Descripción del proyecto
 
 **AGENTE-TUTOR-IA** es una aplicación web desarrollada con **Next.js**, **React**, **TypeScript**, **Supabase** y **OpenAI**. Su propósito es ofrecer un tutor académico inteligente orientado al curso de **Pensamiento Computacional**, permitiendo que los usuarios interactúen mediante un chat, reciban apoyo guiado y mantengan un historial de conversaciones.
