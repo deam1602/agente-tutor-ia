@@ -61,6 +61,12 @@ export default function RegisterPage() {
         return;
       }
 
+      if (role === 'superUser') {
+        setError('El rol de superusuario solo puede ser asignado internamente.');
+        setIsLoading(false);
+        return;
+      }
+
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: normalizedEmail,
         password,

@@ -18,6 +18,7 @@ export default function Header({
   const [showMenu, setShowMenu] = useState(false);
   const [userName, setUserName] = useState('Usuario');
   const [userInitial, setUserInitial] = useState('U');
+  const [userRole, setUserRole] = useState('');
   const router = useRouter();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +34,8 @@ export default function Header({
     if (userInfo) {
       try {
         const parsed = JSON.parse(userInfo);
+        setUserRole(parsed.role || '');
+
         if (parsed.name) {
           setUserName(parsed.name);
           setUserInitial(parsed.name.charAt(0).toUpperCase());
@@ -53,6 +56,10 @@ export default function Header({
     await supabase.auth.signOut();
     localStorage.removeItem('currentUser');
     router.push('/login');
+  };
+
+  const handleGoToDashboard = () => {
+    router.push('/analytics');
   };
 
   return (
@@ -93,7 +100,18 @@ export default function Header({
       </div>
 
       <div className={styles.userActions}>
+        {userRole === 'superUser' && (
+          <button
+            type="button"
+            className={styles.dashboardBtn}
+            onClick={handleGoToDashboard}
+          >
+            Dashboard
+          </button>
+        )}
+
         <span className={styles.userName}>{userName}</span>
+
         <div className={styles.avatarContainer} ref={menuRef}>
           <div
             className={styles.avatar}

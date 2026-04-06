@@ -1,4 +1,4 @@
-export type UserRole = 'student' | 'admin';
+export type UserRole = 'student' | 'admin' | 'superUser';
 
 export function normalizeCarnet(carnet: string): string {
   return carnet.trim().toUpperCase();
@@ -6,7 +6,7 @@ export function normalizeCarnet(carnet: string): string {
 
 export function validateCarnet(carnet: string): boolean {
   const normalized = normalizeCarnet(carnet);
-  return /^(EST|CAT)\d{7}$/.test(normalized);
+  return /^(EST|CAT|SUP)\d{7}$/.test(normalized);
 }
 
 export function getRoleFromCarnet(carnet: string): UserRole | null {
@@ -16,6 +16,7 @@ export function getRoleFromCarnet(carnet: string): UserRole | null {
 
   if (normalized.startsWith('EST')) return 'student';
   if (normalized.startsWith('CAT')) return 'admin';
+  if (normalized.startsWith('SUP')) return 'superUser';
 
   return null;
 }
