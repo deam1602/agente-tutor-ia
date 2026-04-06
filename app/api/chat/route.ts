@@ -160,7 +160,6 @@ function isCourseRelated(text: string) {
     'flotante',
     'booleano'
   ];
-
   return keywords.some((keyword) => lower.includes(keyword));
 }
 
@@ -192,7 +191,7 @@ function isAskingForFullCode(text: string) {
     'hazme el programa',
     'escribe el programa completo'
   ];
-
+  
   return phrases.some((phrase) => lower.includes(phrase));
 }
 
@@ -279,6 +278,72 @@ function getFollowUpStyle(text: string) {
 }
 
 
+//validacion de cuando el usuario dice gracias o algo parecido
+function isGratitude(text: string) {
+  const t = text.toLowerCase().trim();
+  return [
+    'gracias',
+    'muchas gracias',
+    'graciass',
+    'thanks',
+    'thank you',
+    'te lo agradezco',
+    'mil gracias',
+    'thx',
+    'ty',
+    'garcias',
+    'gracias!'
+  ].some(g => t.includes(g));
+}
+
+function isGreeting(text: string) {
+  const t = normalizeText(text);
+  const greetings = [
+    'hola',
+    'buenas',
+    'buenos dias',
+    'buenas tardes',
+    'buenas noches',
+    'holi',
+    'hello',
+    'hi',
+    'holaa'
+  ];
+  return greetings.some((g) => t === g || t.startsWith(g + ' '));
+}
+
+function isFarewell(text: string) {
+  const t = normalizeText(text);
+  const farewells = [
+    'adios',
+    'bye',
+    'nos vemos',
+    'hasta luego',
+    'hasta pronto',
+    'chao',
+    'cuidate',
+    'me voy',
+    'chau'
+  ];
+  return farewells.some((f) => t.includes(f));
+}
+
+function isSmallTalk(text: string) {
+  const t = normalizeText(text);
+  const phrases = [
+    'como estas',
+    'como estas?',
+    'como estas hoy',
+    'como te va',
+    'que tal',
+    'que tal?',
+    'como vas',
+    'todo bien'
+  ];
+  return phrases.some((p) => t.includes(p));
+}
+
+
 
 // posttt ---------------------------------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
@@ -326,6 +391,42 @@ export async function POST(req: NextRequest) {
     }
 
     const extraInstructions: { role: 'system'; content: string }[] = [];
+
+    // saludo
+    if (isGreeting(lastUserMessage.content)) {
+      return NextResponse.json({
+        content:
+          '¡Hola! 👋 Puedo ayudarte con dudas de Pensamiento Computacional, como algoritmos, lógica, pseudocódigo, programación básica e interpretación de código.',
+      });
+    }
+
+    // agradecimiento
+    if (isGratitude(lastUserMessage.content)) {
+      return NextResponse.json({
+        content:
+          '¡De nada! 😊 Si tienes otra duda de Pensamiento Computacional, aquí estoy para ayudarte.',
+      });
+    }
+
+    // despedida
+    if (isFarewell(lastUserMessage.content)) {
+      return NextResponse.json({
+        content:
+          '¡Hasta luego! 👋 Cuando quieras, puedo seguir ayudándote con temas de Pensamiento Computacional.',
+      });
+    }
+
+    if (isSmallTalk(lastUserMessage.content)) {
+      const responses = [
+        '¡Todo bien! 😊 Listo para ayudarte con Pensamiento Computacional. ¿En qué tema te ayudo?',
+        '¡Muy bien! 💡 Preparado para resolver tus dudas. ¿En qué tema de Pensamiento Computacional te ayudo?',
+        '¡Genial! 😄 Aquí listo para ayudarte con el curso. ¿En qué tema de Pensamiento Computacional te ayudo?',
+        '¡Todo en orden! 🚀 ¿Qué quieres aprender hoy?'
+      ];
+      return NextResponse.json({
+        content: responses[Math.floor(Math.random() * responses.length)]
+      });
+    }
 
 
     if (isFollowUp(lastUserMessage.content)) {
