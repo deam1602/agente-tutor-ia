@@ -40,6 +40,7 @@ En **Windows** y **Mac**, los comandos utilizados para instalar dependencias son
 npm install
 npm install dotenv
 npm install react-markdown
+npm install recharts
 ```
 
 > Si el proyecto ya contiene `package.json` y `package-lock.json`, normalmente `npm install` instala todas las dependencias necesarias.
@@ -354,6 +355,14 @@ Lo que sí se guarda en `localStorage` es información básica del usuario para 
 - `role`
 
 Estos datos permiten mostrar información del usuario en pantalla y facilitar ciertas funciones dentro de la aplicación, pero no incluyen la contraseña.
+
+### Acceso al dashboard administrativo
+
+El sistema también cuenta con un dashboard administrativo que no está disponible para todos los usuarios.
+
+El acceso a este apartado está restringido únicamente a los **superusuarios** o usuarios con privilegios administrativos. Esto significa que un usuario común puede registrarse, iniciar sesión y utilizar el tutor académico, pero no puede visualizar ni acceder a las funciones administrativas del sistema.
+
+Esta restricción permite proteger la información sensible y separar claramente las funciones académicas de las funciones de administración.
 
 ### 3. Tablas necesarias
 El sistema utiliza al menos estas tablas:
